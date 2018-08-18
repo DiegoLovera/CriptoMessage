@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CriptoMessage</string>
+    <string name="action_settings">Contraseña</string>
+    <string name="hint_text1">Escribe tu mensaje</string>
+    <string name="button_1">Encriptar</string>
+    <string name="button_2">Descifrar</string>
+    <string name="hint_text2">Resultado</string>
+    <string name="toast_no_text">Escribe un mensaje</string>
+    <string name="toast_no_password">Tienes que ingresar una contraseña</string>
+    <string name="share_text">Comparte tu mensaje</string>
+    <string name="hint_password_dialog">Contraseña</string>
+    <string name="accept">Aceptar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="empty_password">Contraseña vacia</string>
+    <string name="short_password">La contraseña es demasiado corta</string>
+    <string name="correct_password">Contraseña asignada</string>
+</resources>

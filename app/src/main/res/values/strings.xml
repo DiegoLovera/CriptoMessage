@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">CriptoMessage</string>
+    <string name="action_settings">Password</string>
+    <string name="hint_text1">Write your message</string>
+    <string name="button_1">Encrypt</string>
+    <string name="button_2">Decrypt</string>
+    <string name="hint_text2">Result</string>
+    <string name="toast_no_text">Write a message</string>
+    <string name="toast_no_password">You have to set a password</string>
+    <string name="share_text">Share your message</string>
+    <string name="hint_password_dialog">Password</string>
+    <string name="accept">Accept</string>
+    <string name="cancel">Cancel</string>
+    <string name="empty_password">Empty password</string>
+    <string name="short_password">The password is too short</string>
+    <string name="correct_password">Password set</string>
+</resources>
