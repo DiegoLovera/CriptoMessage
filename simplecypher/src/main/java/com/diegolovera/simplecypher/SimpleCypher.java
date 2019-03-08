@@ -1,14 +1,18 @@
 package com.diegolovera.simplecypher;
 
+import com.diegolovera.simplecypher.Exceptions.EmptyListException;
+import com.diegolovera.simplecypher.Exceptions.EmptyPasswordException;
 import com.diegolovera.simplecypher.Exceptions.InvalidLetterException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Diego Lovera on 15/08/2017.
+ *  SimpleCypher implements a simple method of encryption to hide a message in a simple way and
+ *  also implements the method to decrypt them as well. It's important to now that you should not
+ *  use this class if you pretend to keep real important information safe, this is only for simple
+ *  purposes like send a message that you don't want to be read that easily or things like that.
  */
-
 public class SimpleCypher {
     // Required parameter
     private String mPassword;
@@ -16,6 +20,10 @@ public class SimpleCypher {
     // Optional parameters
     private char[] mLetterList;
 
+    /**
+     * private constructor, it can only be reach by the class builder
+     * @param builder it receives the builder
+     */
     private SimpleCypher(SimpleCypherBuilder builder) {
         mPassword = builder.password;
         mLetterList = builder.letterList;
@@ -43,19 +51,33 @@ public class SimpleCypher {
         StringBuilder string = new StringBuilder();
         for (int value : originalList) {
             string.append(mLetterList[value]);
-            /*
-            for (int i = 0; i < mLetterList.length; i++) {
-                if (value == i) {
-                    string.append(mLetterList[i]);
-                }
-            }
-            */
         }
         return string.toString();
     }
 
-    public String encode(String message) throws InvalidLetterException {
-        // Convert password and message to a char array
+    /**
+     * Function to encode a message using the password set and the list of letters passed or the defaults.
+     * The function takes the message and the password to then convert each letter of both into
+     * it's relative value, then it will add the value of the first letter from the message plus
+     * the value of the first letter of the password and so on. Because the message is going to be
+     * probably bigger than the password the password is going to repeat until the message is fully
+     * encrypted, this will create a pattern that could be easily identified, so please do not use
+     * this method if you really need your information to be safe.
+     * @param message String to be encrypted.
+     * @return Returns the String of the message encrypted.
+     * @throws InvalidLetterException If the letter in the message isn't defined in the
+     * {@link SimpleCypher#mLetterList} then the encryption can't be done correctly so an exception will
+     * be throw.
+     * @throws EmptyPasswordException If the {@link SimpleCypher#mPassword} is empty then the
+     * encryption can't be done so an exception will be throw.
+     */
+    public String encrypt(String message) throws InvalidLetterException, EmptyPasswordException {
+        if (mPassword.isEmpty()) {
+            throw new EmptyPasswordException("The password cannot be empty");
+        }
+        if (message.isEmpty()) {
+            return "";
+        }
         char[] passwordArray = mPassword.toCharArray();
         char[] messageArray = message.toCharArray();
         // Create a new array that will carry the value of each letter
@@ -95,7 +117,28 @@ public class SimpleCypher {
         return assignLetterToValue(messageOffset);
     }
 
-    public String decode(String message) throws InvalidLetterException {
+    /**
+     * Function to encode a message using the password set and the list of letters passed or the defaults.
+     * The function takes the message and the password to then convert each letter of both into
+     * it's relative value, then it will subtract the value of the first letter from the message minus
+     * the value of the first letter of the password and so on. Because the message is going to be
+     * probably bigger than the password the password is going to repeat until the message is fully
+     * decrypted.
+     * @param message String to be decrypted.
+     * @return Returns the String of the message decrypted.
+     * @throws InvalidLetterException If the letter in the message isn't defined in the
+     * {@link SimpleCypher#mLetterList} then the decryption can't be done
+     * correctly so an exception will be throw.
+     * @throws EmptyPasswordException If the {@link SimpleCypher#mPassword} is empty then the
+     * decryption can't be done so an exception will be throw.
+     */
+    public String decrypt(String message) throws InvalidLetterException, EmptyPasswordException {
+        if (mPassword.isEmpty()) {
+            throw new EmptyPasswordException("The password cannot be empty");
+        }
+        if (message.isEmpty()) {
+            return "";
+        }
         char[] passwordArray = mPassword.toCharArray();
         char[] messageArray = message.toCharArray();
         List<Integer> passwordValueArray;
@@ -133,18 +176,44 @@ public class SimpleCypher {
         return assignLetterToValue(messageOffset);
     }
 
-    public void setLetterList(char[] letterList) {
+    /**
+     * Method to change the letter list.
+     * @param letterList an array of letters to be use as valid characters
+     *                   to be encrypted or decrypted.
+     * @throws EmptyListException The list of letters must not be empty, if so then an exception
+     * will be throw.
+     */
+    public void changeLetterList(char[] letterList) throws EmptyListException {
+        if (letterList == null || letterList.length == 0) {
+            throw new EmptyListException("The letter list must not be null or empty");
+        }
         mLetterList = letterList;
     }
 
-    public void setPassword(String password) {
+    /**
+     * Method to change the password to be used.
+     * @param password a String that will be the password.
+     * @throws EmptyPasswordException The password must not be empty, if so then an exception will
+     * be throw.
+     */
+    public void changePassword(String password) throws EmptyPasswordException {
+        if (password.isEmpty()) {
+            throw new EmptyPasswordException("The password cannot be empty");
+        }
         mPassword = password;
     }
 
+    /**
+     * Builder class for the {@link SimpleCypher}. The password must be set and a list of valid
+     * characters for the encryption can be set or the defaults can be used.
+     */
     public static class SimpleCypherBuilder {
         private String password;
         private char[] letterList;
 
+        /**
+         * Generates the default characters to be used in case that none are set.
+         */
         private void defaultLetterList() {
             letterList = new char[83];
             letterList[0] = 'a';
@@ -232,16 +301,29 @@ public class SimpleCypher {
             letterList[82] = 'Ñ';
         }
 
+        /**
+         * Default constructor.
+         * @param password a password must be assigned.
+         */
         public SimpleCypherBuilder(String password) {
             this.password = password;
             defaultLetterList();
         }
 
+        /**
+         * Sets the character list to be used in the encryption.
+         * @param letterList an array of chars, each of the characters should be unique.
+         * @return the builder to nest more parameters.
+         */
         public SimpleCypherBuilder setLetterList(char[] letterList) {
             this.letterList = letterList;
             return this;
         }
 
+        /**
+         * Build the instance of the {@link SimpleCypher} class.
+         * @return a new instance with the parameters set ready to be used.
+         */
         public SimpleCypher build() {
             return new SimpleCypher(this);
         }
