@@ -7,15 +7,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.diegolovera.simplecypher.Exceptions.EmptyPasswordException;
+import com.diegolovera.simplecypher.Exceptions.InvalidLetterException;
+import com.diegolovera.simplecypher.SimpleCypher;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 
 public class MainActivity extends AppCompatActivity {
-
-    public static String PASSWORD;
-    private EditText text1;
-    private EditText text2;
+    private EditText mInputText;
+    private EditText mOutputText;
+    private SimpleCypher mCypher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,40 +28,55 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Button encrypt = findViewById(R.id.button2);
         Button decrypt = findViewById(R.id.button);
-        text1 = findViewById(R.id.editText);
-        text2 = findViewById(R.id.editText2);
-        text1.requestFocus();
-
-        final SimpleCypher util = new SimpleCypher();
+        mInputText = findViewById(R.id.editText);
+        mOutputText = findViewById(R.id.editText2);
+        mInputText.requestFocus();
 
         encrypt.setOnClickListener(v -> {
 
-            if (text1.getText().toString().equals("") ||
-                    text1.getText() == null){
+            if (mInputText.getText() == null || mInputText.getText().toString().isEmpty()){
                 Toast.makeText(getApplicationContext(),
                         R.string.toast_no_text,
                         Toast.LENGTH_SHORT).show();
             } else {
-                if (PASSWORD == null) {
+                if (mCypher == null) {
                     Toast.makeText(getApplicationContext(),
                             R.string.toast_no_password,
                             Toast.LENGTH_SHORT).show();
                 } else {
-                    text2.setText(util.Cifrar(
-                            text1.getText().toString(),
-                            PASSWORD));
+                    try {
+                        mOutputText.setText(mCypher.encrypt(mInputText.getText().toString()));
+                    } catch (InvalidLetterException e) {
+                        Toast.makeText(getApplicationContext(),
+                                e.getMessage(),
+                                Toast.LENGTH_LONG).show();
+                    } catch (EmptyPasswordException e) {
+                        Toast.makeText(getApplicationContext(),
+                                e.getMessage(),
+                                Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
 
         decrypt.setOnClickListener(v -> {
-            if (text1.getText().toString().equals("") || text1.getText() == null){
+            if (mInputText.getText() == null || mInputText.getText().toString().isEmpty()){
                 Toast.makeText(getApplicationContext(), R.string.toast_no_text, Toast.LENGTH_SHORT).show();
             } else {
-                if (PASSWORD == null) {
+                if (mCypher == null) {
                     Toast.makeText(getApplicationContext(), R.string.toast_no_password, Toast.LENGTH_SHORT).show();
                 } else {
-                    text2.setText(util.Descifrar(text1.getText().toString(), PASSWORD));
+                    try {
+                        mOutputText.setText(mCypher.decrypt(mInputText.getText().toString()));
+                    } catch (InvalidLetterException e) {
+                        Toast.makeText(getApplicationContext(),
+                                e.getMessage(),
+                                Toast.LENGTH_LONG).show();
+                    } catch (EmptyPasswordException e) {
+                        Toast.makeText(getApplicationContext(),
+                                e.getMessage(),
+                                Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
@@ -85,8 +103,9 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            DialogFragment newFragment = new PasswordDialogFragment();
+            PasswordDialogFragment newFragment = new PasswordDialogFragment();
             newFragment.show(getSupportFragmentManager(), "password");
+            newFragment.setDialogCallback(password -> mCypher = new SimpleCypher.SimpleCypherBuilder(password).build());
             return true;
         }
 
