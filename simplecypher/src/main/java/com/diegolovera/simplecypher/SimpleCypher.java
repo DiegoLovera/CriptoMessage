@@ -215,7 +215,7 @@ public class SimpleCypher {
          * Generates the default characters to be used in case that none are set.
          */
         private void defaultLetterList() {
-            letterList = new char[83];
+            letterList = new char[104];
             letterList[0] = 'a';
             letterList[1] = 'b';
             letterList[2] = 'c';
@@ -299,6 +299,27 @@ public class SimpleCypher {
             letterList[80] = '=';
             letterList[81] = 'ñ';
             letterList[82] = 'Ñ';
+            letterList[83] = 'á';
+            letterList[84] = 'é';
+            letterList[85] = 'í';
+            letterList[86] = 'ó';
+            letterList[87] = 'ú';
+            letterList[88] = 'Á';
+            letterList[89] = 'É';
+            letterList[90] = 'Í';
+            letterList[91] = 'Ó';
+            letterList[92] = 'Ú';
+            letterList[93] = 'ä';
+            letterList[94] = 'ë';
+            letterList[95] = 'ï';
+            letterList[96] = 'ö';
+            letterList[97] = 'ü';
+            letterList[98] = 'Ä';
+            letterList[99] = 'Ë';
+            letterList[100] = 'Ï';
+            letterList[101] = 'Ö';
+            letterList[102] = 'Ü';
+            letterList[103] = '\'';
         }
 
         /**
