@@ -61,10 +61,46 @@ public class SimpleCypher {
         // Create a new array that will carry the value of each letter
         List<Integer> passwordValueArray;
         List<Integer> messageValueArray;
-        //
         int[] messageOffset = new int[messageArray.length];
-        // Final message encoded
-        char[] encodedMessage = new char[messageArray.length];
+
+        passwordValueArray = assignValueToArray(passwordArray);
+        if (passwordValueArray == null) {
+            throw new InvalidLetterException("A letter or more in the password are not in the list defined, please change the word or reassign the list");
+        }
+
+        messageValueArray = assignValueToArray(messageArray);
+        if (messageValueArray == null) {
+            throw new InvalidLetterException("A letter or more in the word are not in the list defined, please change the word or reassign the list");
+        }
+
+        // Ahora es necesario recorrer el arreglo del mensaje completo e ir sumando los caracteres de la contraseña
+        int passwordIndex = -1;
+        int currentCicle = passwordArray.length;
+        for (int i = 0; i < messageArray.length; i++) {
+            // La contraseña suele ser más corta que el mensaje por lo que tiene que reptirse el index del arreglo de la contraseña
+            if (i == currentCicle) {
+                currentCicle += passwordArray.length;
+                passwordIndex = 0;
+            } else {
+                passwordIndex += 1;
+            }
+            // Sumamos los valores del mensaje y la contraseña
+            messageOffset[i] = messageValueArray.get(i) + passwordValueArray.get(passwordIndex);
+            // Si el valor sobre pasa la cantidad de letras entonces es necesario regresarlo
+            if (messageOffset[i] > (mLetterList.length - 1)) {
+                messageOffset[i] = messageOffset[i] -  mLetterList.length;
+            }
+        }
+
+        return assignLetterToValue(messageOffset);
+    }
+
+    public String decode(String message) throws InvalidLetterException {
+        char[] passwordArray = mPassword.toCharArray();
+        char[] messageArray = message.toCharArray();
+        List<Integer> passwordValueArray;
+        List<Integer> messageValueArray;
+        int[] messageOffset = new int[messageArray.length];
 
         passwordValueArray = assignValueToArray(passwordArray);
         if (passwordValueArray == null) {
@@ -79,65 +115,30 @@ public class SimpleCypher {
         int passwordIndex = -1;
         int currentCicle = passwordArray.length;
         for (int i = 0; i < messageArray.length; i++) {
+            // La contraseña suele ser más corta que el mensaje por lo que tiene que reptirse el index del arreglo de la contraseña
             if (i == currentCicle) {
                 currentCicle += passwordArray.length;
                 passwordIndex = 0;
             } else {
                 passwordIndex += 1;
             }
-            messageOffset[i] = messageValueArray.get(i) + passwordValueArray.get(passwordIndex);
-            if (messageOffset[i] > (mLetterList.length - 1)) {
-                messageOffset[i] = messageOffset[i] -  mLetterList.length;
+            // Sumamos los valores del mensaje y la contraseña
+            messageOffset[i] = messageValueArray.get(i) - passwordValueArray.get(passwordIndex);
+            // Si el valor sobre pasa la cantidad de letras entonces es necesario regresarlo
+            if (messageOffset[i] < 0) {
+                messageOffset[i] = messageOffset[i] +  mLetterList.length;
             }
         }
 
         return assignLetterToValue(messageOffset);
     }
 
-    public String decode(String message){
-        char[] ClaveArray = mPassword.toCharArray();
-        char[] MensajeArray = message.toCharArray();
-        int[] ClaveArrayNumero = new int[ClaveArray.length];
-        int[] MensajeArrayNumero = new int[MensajeArray.length];
-        int[] AumentoMensaje = new int[MensajeArray.length];
-        char[] MensajeCifrado = new char[MensajeArray.length];
-        for (int i = 0; i < ClaveArray.length; i++) {
-            for (int j = 0; j < mLetterList.length; j++) {
-                if (ClaveArray[i] == mLetterList[j]) {
-                    ClaveArrayNumero[i] = j;
-                }
-            }
-        }
-        for (int i = 0; i < MensajeArray.length; i++) {
-            for (int j = 0; j < mLetterList.length; j++) {
-                if (MensajeArray[i] == mLetterList[j]) {
-                    MensajeArrayNumero[i] = j;
-                }
-            }
-        }
-        int o = -1;
-        int ola = ClaveArray.length;
-        int ValorAumento = ClaveArray.length;
-        for (int i = 0; i < MensajeArray.length; i++) {
-            if (i == ola) {
-                ola += ValorAumento;
-                o = 0;
-            } else {
-                o += 1;
-            }
-            AumentoMensaje[i] = MensajeArrayNumero[i] - ClaveArrayNumero[o];
-            if (AumentoMensaje[i] < 0) {
-                AumentoMensaje[i] = AumentoMensaje[i] + mLetterList.length;
-            }
-        }
-        for (int i = 0; i < AumentoMensaje.length; i++) {
-            for (int j = 0; j < mLetterList.length; j++) {
-                if (AumentoMensaje[i] == j) {
-                    MensajeCifrado[i] = mLetterList[j];
-                }
-            }
-        }
-        return new String(MensajeCifrado);
+    public void setLetterList(char[] letterList) {
+        mLetterList = letterList;
+    }
+
+    public void setPassword(String password) {
+        mPassword = password;
     }
 
     public static class SimpleCypherBuilder {
