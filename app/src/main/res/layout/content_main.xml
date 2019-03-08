@@ -25,6 +25,7 @@
             android:id="@+id/input_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_close_black_24dp"
             android:hint="Input text" />
     </com.google.android.material.textfield.TextInputLayout>
 
