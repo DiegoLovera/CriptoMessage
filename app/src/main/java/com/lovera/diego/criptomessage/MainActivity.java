@@ -142,9 +142,9 @@ public class MainActivity extends AppCompatActivity implements DialogCallback {
                     Toast.LENGTH_SHORT).show();
         } else {
             if (mCypher == null) {
-                Toast.makeText(getApplicationContext(),
-                        R.string.toast_no_password,
-                        Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.mainCoordinator),
+                        R.string.toast_no_password, Snackbar.LENGTH_LONG)
+                        .setAction("Set password", v -> showDialogPassword()).show();
             } else {
                 try {
                     hideKeyboard();
@@ -167,7 +167,9 @@ public class MainActivity extends AppCompatActivity implements DialogCallback {
             Toast.makeText(getApplicationContext(), R.string.toast_no_text, Toast.LENGTH_SHORT).show();
         } else {
             if (mCypher == null) {
-                Toast.makeText(getApplicationContext(), R.string.toast_no_password, Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.mainCoordinator),
+                        R.string.toast_no_password, Snackbar.LENGTH_LONG)
+                        .setAction("Set password", v -> showDialogPassword()).show();
             } else {
                 try {
                     hideKeyboard();
