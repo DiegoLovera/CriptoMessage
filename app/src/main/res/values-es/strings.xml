@@ -7,7 +7,7 @@
     <string name="button_2">Descifrar</string>
     <string name="hint_text2">Resultado</string>
     <string name="toast_no_text">Escribe un mensaje</string>
-    <string name="toast_no_password">Tienes que ingresar una contraseña</string>
+    <string name="toast_no_password">Contraseña no establecida</string>
     <string name="share_text">Comparte tu mensaje</string>
     <string name="hint_password_dialog">Contraseña</string>
     <string name="accept">Aceptar</string>
@@ -15,4 +15,15 @@
     <string name="empty_password">Contraseña vacia</string>
     <string name="short_password">La contraseña es demasiado corta</string>
     <string name="correct_password">Contraseña asignada</string>
+    <string name="text_copied">Texto copiado al portapapeles</string>
+    <string name="share_button">Compartir</string>
+    <string name="clear_button">Limpiar</string>
+    <string name="set_password">Ingresar constraseña</string>
+    <string name="share_app">Comparte la aplicación</string>
+    <string name="to_repository">Mira el código</string>
+    <string name="diego_lovera_page">Desarrollador</string>
+    <string name="copy">Copiar</string>
+    <string name="clear">Limpiar</string>
+    <string name="input_text">Mensaje</string>
+    <string name="output_text">Resultado</string>
 </resources>

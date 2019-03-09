@@ -1,10 +1,13 @@
 package com.lovera.diego.criptomessage;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +20,8 @@ import android.widget.Toast;
 import com.diegolovera.simplecypher.Exceptions.EmptyPasswordException;
 import com.diegolovera.simplecypher.Exceptions.InvalidLetterException;
 import com.diegolovera.simplecypher.SimpleCypher;
+import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -24,12 +29,15 @@ import java.util.Objects;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-public class MainActivity extends AppCompatActivity implements DialogCallback {
+public class MainActivity extends AppCompatActivity {
     private TextInputEditText mInputText;
     private TextInputEditText mOutputText;
     private SimpleCypher mCypher;
     private SharedPreferences mPreferences;
+    private BottomAppBar mBottomAppBar;
+    private CoordinatorLayout mCoordinatorLayout;
     private static final String PASSWORD_KEY = "PASSWORD";
 
     @Override
@@ -41,15 +49,11 @@ public class MainActivity extends AppCompatActivity implements DialogCallback {
 
         mPreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
         String password = mPreferences.getString(PASSWORD_KEY, "");
-        if (password.isEmpty()) {
-            Snackbar.make(findViewById(R.id.mainCoordinator),
-                    "A password must be set", Snackbar.LENGTH_LONG)
-                    .setAction("Set password", v -> showDialogPassword()).show();
+        if (password == null || password.isEmpty()) {
+            showPasswordMissing();
         } else {
             mCypher = new SimpleCypher.SimpleCypherBuilder(password).build();
         }
-
-
     }
 
     @Override
@@ -67,39 +71,105 @@ public class MainActivity extends AppCompatActivity implements DialogCallback {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.set_password) {
-            showDialogPassword();
+        if (id == R.id.share_app) {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT,
+                    "https://github.com/DiegoLovera/SimpleCypher");
+            sendIntent.setType("text/plain");
+            startActivity(Intent.createChooser(sendIntent, "Share"));
+            return true;
+        } else if (id == R.id.check_repo) {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://github.com/DiegoLovera/SimpleCypher"));
+            startActivity(browserIntent);
+            return true;
+        } else if (id == R.id.personal_page) {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://diegolovera.github.io/"));
+            startActivity(browserIntent);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onPasswordSet(String password) {
-        mPreferences.edit().putString(PASSWORD_KEY, password).apply();
-        mCypher = new SimpleCypher.SimpleCypherBuilder(password).build();
+    public void showPasswordMissing() {
+        Snackbar.make(mCoordinatorLayout,
+                R.string.toast_no_password, Snackbar.LENGTH_LONG)
+                .setAction(R.string.set_password, v -> showDialogPassword()).show();
     }
 
-    @Override
-    public void onCancelDialog() {
-        String password = mPreferences.getString(PASSWORD_KEY, "");
-        if (password.isEmpty()) {
-            Snackbar.make(findViewById(R.id.mainCoordinator),
-                    "A password must be set", Snackbar.LENGTH_LONG)
-                    .setAction("Set password", v -> showDialogPassword()).show();
-        }
+    public void showTextMissing() {
+        Snackbar.make(mCoordinatorLayout, R.string.toast_no_text, Snackbar.LENGTH_LONG).show();
     }
 
     private void showDialogPassword(){
         DialogPassword dialog = new DialogPassword();
         dialog.show(getSupportFragmentManager(), "password");
-        dialog.setDialogCallback(this);
+        dialog.setDialogCallback(new DialogCallback() {
+            @Override
+            public void onPasswordSet(String password) {
+                mPreferences.edit().putString(PASSWORD_KEY, password).apply();
+                mCypher = new SimpleCypher.SimpleCypherBuilder(password).build();
+            }
+
+            @Override
+            public void onCancelDialog() {
+                String password = mPreferences.getString(PASSWORD_KEY, "");
+                if (password == null || password.isEmpty()) {
+                    showPasswordMissing();
+                }
+            }
+        });
     }
 
+    private void copyTextToClipboard() {
+        if (!Objects.requireNonNull(mOutputText.getText()).toString().isEmpty()) {
+            ClipboardManager clipboard = (ClipboardManager)
+                    getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("Encrypted text",
+                    mOutputText.getText().toString());
+            if (clipboard != null) {
+                clipboard.setPrimaryClip(clip);
+                Snackbar.make(mCoordinatorLayout,
+                        R.string.text_copied, Snackbar.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
     private void setViews() {
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(v -> {
+            if (!Objects.requireNonNull(mOutputText.getText()).toString().isEmpty()) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, mOutputText.getText().toString());
+                sendIntent.setType("text/plain");
+                startActivity(Intent.createChooser(sendIntent, "Share"));
+            } else {
+                showTextMissing();
+            }
+        });
+        mCoordinatorLayout = findViewById(R.id.mainCoordinator);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        mBottomAppBar = findViewById(R.id.bottomBar);
         setSupportActionBar(toolbar);
+        mBottomAppBar.replaceMenu(R.menu.bottom_appbar_menu);
+        mBottomAppBar.setOnMenuItemClickListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.copy) {
+                copyTextToClipboard();
+                return true;
+            } else if (id == R.id.clear) {
+                mInputText.setText("");
+                mOutputText.setText("");
+                return true;
+            }
+            return super.onOptionsItemSelected(item);
+        });
+        mBottomAppBar.setNavigationOnClickListener(v -> showDialogPassword());
         Button mButtonEncrypt = findViewById(R.id.button_encrypt);
         Button mButtonDecrypt = findViewById(R.id.button_decrypt);
         mButtonDecrypt.setOnClickListener(v -> decrypt());
@@ -122,29 +192,16 @@ public class MainActivity extends AppCompatActivity implements DialogCallback {
 
         mOutputText = findViewById(R.id.output_text);
         mOutputText.setFocusable(false);
-        mOutputText.setOnClickListener(v -> {
-            if (!Objects.requireNonNull(mOutputText.getText()).toString().isEmpty()) {
-                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("Encrypted text", mOutputText.getText().toString());
-                if (clipboard != null) {
-                    clipboard.setPrimaryClip(clip);
-                    Snackbar.make(findViewById(R.id.mainCoordinator),
-                            "Text copied to the clipboard", Snackbar.LENGTH_SHORT).show();
-                }
-            }
-        });
+        mOutputText.setOnClickListener(v -> copyTextToClipboard());
     }
 
     private void encrypt() {
         if (mInputText.getText() == null || mInputText.getText().toString().isEmpty()){
-            Toast.makeText(getApplicationContext(),
-                    R.string.toast_no_text,
-                    Toast.LENGTH_SHORT).show();
+            showTextMissing();
         } else {
             if (mCypher == null) {
-                Snackbar.make(findViewById(R.id.mainCoordinator),
-                        R.string.toast_no_password, Snackbar.LENGTH_LONG)
-                        .setAction("Set password", v -> showDialogPassword()).show();
+                hideKeyboard();
+                showPasswordMissing();
             } else {
                 try {
                     hideKeyboard();
@@ -163,13 +220,12 @@ public class MainActivity extends AppCompatActivity implements DialogCallback {
     }
 
     private void decrypt() {
-        if (mInputText.getText() == null || mInputText.getText().toString().isEmpty()){
-            Toast.makeText(getApplicationContext(), R.string.toast_no_text, Toast.LENGTH_SHORT).show();
+        if (mInputText.getText() == null || mInputText.getText().toString().isEmpty()) {
+            showTextMissing();
         } else {
             if (mCypher == null) {
-                Snackbar.make(findViewById(R.id.mainCoordinator),
-                        R.string.toast_no_password, Snackbar.LENGTH_LONG)
-                        .setAction("Set password", v -> showDialogPassword()).show();
+                hideKeyboard();
+                showPasswordMissing();
             } else {
                 try {
                     hideKeyboard();
@@ -188,7 +244,8 @@ public class MainActivity extends AppCompatActivity implements DialogCallback {
     }
 
     private void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager)
+                this.getSystemService(Activity.INPUT_METHOD_SERVICE);
         //Find the currently focused view, so we can grab the correct window token from it.
         View view = this.getCurrentFocus();
         //If no view currently has focus, create a new one, just so we can grab a window token from it

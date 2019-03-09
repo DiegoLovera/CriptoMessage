@@ -6,7 +6,7 @@
     <string name="button_2">Decrypt</string>
     <string name="hint_text2">Result</string>
     <string name="toast_no_text">Write a message</string>
-    <string name="toast_no_password">You have to set a password</string>
+    <string name="toast_no_password">Password not set</string>
     <string name="share_text">Share your message</string>
     <string name="hint_password_dialog">Password</string>
     <string name="accept">Accept</string>
@@ -14,4 +14,15 @@
     <string name="empty_password">Empty password</string>
     <string name="short_password">The password is too short</string>
     <string name="correct_password">Password set</string>
+    <string name="text_copied">Text copied to the clipboard</string>
+    <string name="share_button">Share</string>
+    <string name="clear_button">Clear</string>
+    <string name="set_password">Set password</string>
+    <string name="share_app">Share the app</string>
+    <string name="to_repository">Check the code</string>
+    <string name="diego_lovera_page">Developer</string>
+    <string name="copy">Copy</string>
+    <string name="clear">Clear</string>
+    <string name="input_text">Message</string>
+    <string name="output_text">Result</string>
 </resources>

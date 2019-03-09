@@ -1,13 +1,11 @@
 package com.lovera.diego.criptomessage;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -81,6 +79,14 @@ public class DialogPassword extends DialogFragment {
             }
         });
         return v;
+    }
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        if (listener != null) {
+            listener.onCancelDialog();
+        }
+        super.onDismiss(dialog);
     }
 
     public void setDialogCallback(DialogCallback callback) {

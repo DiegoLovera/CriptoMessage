@@ -26,7 +26,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableEnd="@drawable/ic_close_black_24dp"
-            android:hint="Input text" />
+            android:gravity="top|start"
+            android:hint="@string/input_text"
+            android:minHeight="100dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -39,16 +41,16 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
+        app:layout_constraintTop_toBottomOf="@+id/button_encrypt">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/output_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="top|start"
-            android:hint="Output text"
+            android:hint="@string/output_text"
             android:inputType="textMultiLine"
-            android:minLines="8" />
+            android:minHeight="200dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
@@ -60,19 +62,25 @@
         android:layout_marginEnd="8dp"
         android:text="@string/button_1"
         app:cornerRadius="10dp"
-        app:layout_constraintEnd_toStartOf="@+id/button_decrypt"
-        app:layout_constraintTop_toBottomOf="@+id/textOutputLayout" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/button_decrypt"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_decrypt"
         style="@style/Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
         android:text="@string/button_2"
         app:cornerRadius="10dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textOutputLayout" />
+        app:layout_constraintEnd_toStartOf="@+id/button_encrypt"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

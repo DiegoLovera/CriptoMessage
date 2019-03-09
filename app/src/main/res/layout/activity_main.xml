@@ -25,4 +25,22 @@
     <include
         android:id="@+id/include"
         layout="@layout/content_main" />
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottomBar"
+        style="@style/Widget.MaterialComponents.BottomAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:fabAlignmentMode="center"
+        app:backgroundTint="@color/colorPrimary"
+        app:navigationIcon="@drawable/ic_lock_white_24dp"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:tint="@android:color/white"
+        app:srcCompat="@drawable/ic_share_white_24dp"
+        app:layout_anchor="@id/bottomBar" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

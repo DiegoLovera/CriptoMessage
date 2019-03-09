@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.lovera.diego.criptomessage.MainActivity">
+
+    <item
+        android:id="@+id/copy"
+        android:checkable="false"
+        android:orderInCategory="3"
+        android:title="@string/copy"
+        android:icon="@drawable/ic_content_copy_white_24dp"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/clear"
+        android:checkable="false"
+        android:orderInCategory="4"
+        android:title="@string/clear"
+        android:icon="@drawable/ic_delete_sweep_white_24dp"
+        app:showAsAction="ifRoom" />
+
+</menu>
