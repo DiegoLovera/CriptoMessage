@@ -1,11 +1,16 @@
 <resources>
-
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryLight">@color/colorPrimaryLight</item>
+
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSecondaryDark">@color/colorSecondaryDark</item>
+        <item name="colorSecondaryLight">@color/colorSecondaryLight</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -13,8 +18,8 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Dark" />
 
     <style name="Dialog.NoTitle.Transparent" parent="@android:style/Theme.Material.Light.Dialog.NoActionBar.MinWidth">
         <item name="android:windowBackground">@drawable/dialog_background</item>
@@ -22,6 +27,14 @@
 
     <style name="Rounded.Toolbar" parent="">
         <item name="android:background">@drawable/toolbar_rounded_background</item>
+    </style>
+
+    <style name="TextButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/colorSecondary</item>
+    </style>
+
+    <style name="Button" parent="Widget.MaterialComponents.Button">
+        <item name="android:backgroundTint">@color/colorSecondary</item>
     </style>
 
 </resources>

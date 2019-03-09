@@ -10,17 +10,15 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:elevation="0dp"
-        android:background="@android:color/transparent">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:elevation="4dp">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:elevation="8dp"
-            android:layout_height="?attr/actionBarSize"
-            app:titleTextColor="@android:color/white"
-            android:background="@drawable/toolbar_rounded_background" />
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
