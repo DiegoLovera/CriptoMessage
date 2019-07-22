@@ -33,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         app:fabAlignmentMode="center"
+        app:fabCradleRoundedCornerRadius="10dp"
         app:backgroundTint="@color/colorPrimary"
         app:navigationIcon="@drawable/ic_lock_white_24dp"/>
 

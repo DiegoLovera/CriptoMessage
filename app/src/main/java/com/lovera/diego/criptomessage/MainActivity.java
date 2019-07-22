@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         mPreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
         String password = mPreferences.getString(PASSWORD_KEY, "");
-        if (password == null || password.isEmpty()) {
+        if (password.isEmpty()) {
             showPasswordMissing();
         } else {
             mCypher = new SimpleCypher.SimpleCypherBuilder(password).build();
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCancelDialog() {
                 String password = mPreferences.getString(PASSWORD_KEY, "");
-                if (password == null || password.isEmpty()) {
+                if (password.isEmpty()) {
                     showPasswordMissing();
                 }
             }
